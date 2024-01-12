@@ -1,0 +1,9 @@
+transformers
+pillow
+pyrogram
+torch
+opencv-python
+uvloop
+cryptg
+tgcrypto
+motor
