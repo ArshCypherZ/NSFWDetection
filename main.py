@@ -23,15 +23,14 @@ def getimage():
             outputs = model(**inputs)
             logits = outputs.logits
 
-        predicted_label = logits.argmax(-1).item()
-        if predicted_label:
+        if predicted_label := logits.argmax(-1).item():
             print("NSFW")
         else:
             print("Not NSFW")
-    
+
     elif path.endswith(".mp4") or path.endswith(".webm"):
         videoShit(path)
-    
+
     else:
         print("Invalid file format")
 
@@ -67,8 +66,7 @@ def videoShit(video_path):
             outputs = model(**inputs)
             logits = outputs.logits
 
-        predicted_label = logits.argmax(-1).item()
-        if predicted_label:
+        if predicted_label := logits.argmax(-1).item():
             print("NSFW")
         else:
             print("Not NSFW")

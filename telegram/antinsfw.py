@@ -13,7 +13,7 @@ from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 model = AutoModelForImageClassification.from_pretrained("Falconsai/nsfw_image_detection")
 processor = ViTImageProcessor.from_pretrained('Falconsai/nsfw_image_detection')
 
-@client.on_message(filters.photo | filters.sticker | filters.animation | filters.video) 
+@client.on_message(filters.photo | filters.sticker | filters.animation | filters.video)
 async def getimage(client, event):
     if event.photo:
         file_id = event.photo.file_id
@@ -45,7 +45,7 @@ async def getimage(client, event):
             except Exception as e:
                 logging.error(f"Failed to download sticker. Error: {e}")
                 return
-            
+
     elif event.animation:
         file_id = event.animation.file_id
         if (await is_nsfw(file_id)):
@@ -71,15 +71,14 @@ async def getimage(client, event):
         await videoShit(event, "video.mp4", file_id)
     else:
         return
-    
+
     img = Image.open("image.png")
     with torch.no_grad():
         inputs = processor(images=img, return_tensors="pt")
         outputs = model(**inputs)
         logits = outputs.logits
 
-    predicted_label = logits.argmax(-1).item()
-    if predicted_label:
+    if predicted_label := logits.argmax(-1).item():
         await add_nsfw(file_id)
         await send_msg(event)
     else:
@@ -148,11 +147,9 @@ async def videoShit(event, video_path, file_id):
             outputs = model(**inputs)
             logits = outputs.logits
 
-        predicted_label = logits.argmax(-1).item()
-        if predicted_label:
+        if predicted_label := logits.argmax(-1).item():
             await add_nsfw(file_id)
             await send_msg(event)
-            return
         else:
             await remove_nsfw(file_id)
-            return
+        return

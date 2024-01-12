@@ -16,9 +16,7 @@ async def add_chat(chat_id: int):
 
 async def is_nsfw(file_id: str):
     m = await files.find_one({'file_id': file_id})
-    if m:
-        return m['nsfw']
-    return False
+    return m['nsfw'] if m else False
 
 async def add_nsfw(file_id: str):
     await files.update_one({'file_id': file_id}, {'$set': {'nsfw': True}}, upsert=True)
